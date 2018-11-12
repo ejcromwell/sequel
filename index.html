@@ -6,9 +6,6 @@
     <title>Sequel - Challenge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <script>
-
-    </script>
   </head>
   <body>
   <section class="section">
@@ -28,17 +25,68 @@
     <div class="container">
 
       <div class="field">
-        <label class="label">Amount</label>
+        <label class="label">Enter Amount In Pence</label>
         <div class="control">
-          <input class="input is-rounded" type="text" placeholder="Text input">
+          <input class="input is-rounded" id="userInput" type="number" placeholder="100">
         </div>
       </div>
 
-      <a class="button">submit</a>
+      <a class="button" id="submitBtn">submit</a>
 
     </div>
 
   </section>
+  <script>
+
+    // Get DOM elements
+    const submitBtn = document.getElementById('submitBtn');
+    const userInputField = document.getElementById('userInput');
+
+    // Create Coin Array
+    const coins = [
+      {name: '1p', value:1},
+      {name: '2p', value:2},
+      {name: '5p', value:5},
+      {name: '10p', value:10},
+      {name: '20p', value:20},
+      {name: '50p', value:50},
+      {name: '£1', value: 100},
+      {name: '£2', value: 200}
+    ];
+
+    // Grab the user input
+    var getUserInput = function(userInputField){
+      let value = userInputField.value;
+      return value;
+    };
+
+    // Minimal user input validation
+    var checkUserInput = function(input){
+      if(input.length < 1){
+        return 'Please enter an amount in pence';
+      }
+
+      let value = Number(input);
+
+      if(Number.isInteger(value) === false){
+        return 'Please enter a valid amount in pence';
+      }
+
+      return value;
+    };
+
+
+
+    submitBtn.addEventListener('click', function(){
+
+      let userInput = getUserInput(userInputField);
+      let checkedInput = checkUserInput(userInput);
+
+    });
+
+
+  </script>
+
 
   </body>
 </html>
