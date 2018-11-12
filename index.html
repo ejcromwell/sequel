@@ -6,6 +6,41 @@
     <title>Sequel - Challenge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <style>
+      .coin {
+        width: 200px;
+        height: 200px;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 150px 150px;
+      }
+      .coin-size-1 {
+        background-image: url('images/1.png');
+      }
+      .coin-size-2 {
+        background-image: url('images/2.png');
+      }
+      .coin-size-5 {
+        background-image: url('images/5.png');
+      }
+      .coin-size-10 {
+        background-image: url('images/10.png');
+      }
+      .coin-size-20 {
+        background-image: url('images/20.png');
+      }
+      .coin-size-50 {
+        background-image: url('images/50.png');
+      }
+      .coin-size-100 {
+        background-image: url('images/100.png');
+      }
+
+      .coin-size-200 {
+        background-image: url('images/200.png');
+      }
+
+    </style>
   </head>
   <body>
   <section class="section">
@@ -36,6 +71,12 @@
     </div>
 
   </section>
+
+  <section class="section">
+    <div class="container" id="results">
+
+    </div>
+  </section>
   <script>
 
     // Get DOM elements
@@ -53,6 +94,17 @@
       {name: '£1', value: 100},
       {name: '£2', value: 200}
     ];
+
+    // Remove current list items
+    var clearList = function() {
+
+      const currentList = document.getElementById('results');
+
+      while (currentList.firstChild) {
+        currentList.removeChild(currentList.firstChild);
+      }
+      return;
+    }
 
     // Grab the user input
     var getUserInput = function(userInputField){
@@ -75,12 +127,73 @@
       return value;
     };
 
+    // Create the coin list
+    var outputCoins = function (coins) {
+      // Create the list element:
+      let list = document.createElement('ul');
+      list.id = 'list';
 
+      for (var i = 0; i < coins.length; i++) {
+        // Create the list item:
+        var item = document.createElement('li');
+        item.className = 'coin coin-size-' + coins[i].value;
+
+        // Set its contents:
+        item.appendChild(document.createTextNode(coins[i].name));
+
+        // Add it to the list:
+        list.appendChild(item);
+      }
+
+      // Finally, return the constructed list:
+      return list;
+    }
+
+    var smallEnough = function (argument) {
+
+      let smallEnough = coins.filter(function(coin) {
+        if(coin.value < userInput) {
+          return coin.value;
+        }
+      });
+    }
+
+    smallEnough.sort(function(a,b) {
+      return a.value - b.value;
+    });
+
+    smallEnough.reverse();
+
+    var checkImmediateMatch = function(coins, userInput) {
+
+      let coinName = false;
+
+      let match = coins.some(function(coin){
+        return coin.value === userInput;
+      });
+
+      if (match === true) {
+        let coinName = coins.filter(function(coin) {
+          if(coin.value === userInput) {
+            return coin.name;
+          }
+        });
+        return outputCoins(coinName);
+      }
+
+
+      alert('this shouldnt show');
+
+    }
 
     submitBtn.addEventListener('click', function(){
-
+      clearList();
       let userInput = getUserInput(userInputField);
       let checkedInput = checkUserInput(userInput);
+      let immediateMatch = checkImmediateMatch(coins, checkedInput);
+      document.getElementById('results').appendChild(immediateMatch);
+      console.log(immediateMatch);
+
 
     });
 
