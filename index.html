@@ -149,20 +149,73 @@
       return list;
     }
 
-    var smallEnough = function (argument) {
+    // Checking to find only coins smaller than the user input value
+    // Also sort the returned value into largest coin size first
+    var filterCoinArray = function (coins, userInput) {
 
       let smallEnough = coins.filter(function(coin) {
         if(coin.value < userInput) {
           return coin.value;
         }
       });
+
+      smallEnough.sort(function(a,b) {
+        return a.value - b.value;
+      });
+
+      smallEnough.reverse();
+
+      return smallEnough;
     }
 
-    smallEnough.sort(function(a,b) {
-      return a.value - b.value;
-    });
+    var twoPoundCheck = function(userInput, filteredCoins){
 
-    smallEnough.reverse();
+      let newValue = userInput;
+      let newArray = [];
+
+      for (i = 0; i < filteredCoins.length; i++){
+
+        if(newValue > 400){
+          let remainder = newValue % 200;
+          let largeValue = (newValue - remainder);
+          let twoPoundAmount = largeValue / 200;
+
+          while(twoPoundAmount > 0){
+            newArray.push(filteredCoins[i]);
+            twoPoundAmount--;
+          }
+          newValue = remainder;
+        }
+
+        if(newValue >= (filteredCoins[i].value * 2)){
+
+          for(let j = 0; j < 2; j++){
+            newValue -= filteredCoins[i].value;
+            newArray.push(filteredCoins[i]);
+          }
+        }
+        if(filteredCoins[i].value <= newValue){
+          newValue -= filteredCoins[i].value;
+          newArray.push(filteredCoins[i]);
+        }
+      }
+
+      console.log(newArray);
+      return newArray;
+    }
+
+    var createAsocArray = function(newArray){
+
+      let counts = {};
+
+      newArray.forEach(function(amount) {
+        console.log(amount);
+        //counts[amount] = (counts[amount] || 0)+1;
+      });
+
+      return Object.entries(counts).map(([name, value, amount]) => ({name, value, amount}));
+
+    }
 
     var checkImmediateMatch = function(coins, userInput) {
 
@@ -181,8 +234,12 @@
         return outputCoins(coinName);
       }
 
+      let filteredCoins =  filterCoinArray(coins, userInput);
 
-      alert('this shouldnt show');
+      let newArray = twoPoundCheck(userInput, filteredCoins);
+      let output = createAsocArray(newArray);
+      // console.log(output);
+      return outputCoins(output);
 
     }
 
@@ -192,7 +249,6 @@
       let checkedInput = checkUserInput(userInput);
       let immediateMatch = checkImmediateMatch(coins, checkedInput);
       document.getElementById('results').appendChild(immediateMatch);
-      console.log(immediateMatch);
 
 
     });
